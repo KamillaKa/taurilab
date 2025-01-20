@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import Camera from '@/components/Camera';
 import { useFaceDetection } from '@/hooks/FaceHooks';
+import { useNavigate } from 'react-router';
 
 const DetectFace: React.FC = () => {
 const videoRef = useRef<HTMLVideoElement>(null); // Reference to the video element
 const {detection, getDescriptors} = useFaceDetection();
+const navigate = useNavigate();
 
 useEffect(() => {
 let timer: ReturnType<typeof setTimeout> | null = null;
@@ -12,7 +14,11 @@ let timer: ReturnType<typeof setTimeout> | null = null;
     // Detect face from video frames
     const detectFace = async () => {
       try {
-        await getDescriptors(videoRef);
+        const descriptors = await getDescriptors(videoRef);
+        if (descriptors) {
+          navigate('/detected');
+          state: descriptors;
+        }
       } catch (error) {
         console.error('Error detecting face:', error);
       }
